@@ -1,0 +1,8 @@
+.vs
+
+# User-specific files
+*.user
+
+# Build results
+[Bb]in/
+[Oo]bj/
