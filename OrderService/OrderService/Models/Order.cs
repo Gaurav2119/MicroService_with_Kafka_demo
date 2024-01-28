@@ -4,11 +4,10 @@ namespace OrderService.Models
 {
     public class Order
     {
-        [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Display(Name = "Product Id")]
-        public int productId { get; set; }
+        public Guid productId { get; set; }
 
         [Display(Name = "Quantity ordered")]
         public int quantity { get; set; }

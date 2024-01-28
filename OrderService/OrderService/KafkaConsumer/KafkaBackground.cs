@@ -21,7 +21,7 @@ namespace OrderService.KafkaConsumer
             using (var scope = _scopeFactory.CreateScope())
             {
                 var orderDataAccess = scope.ServiceProvider.GetRequiredService<IOrder>();
-                _consumer.ConsumeMessage("inventory-topic", stoppingToken, orderDataAccess);
+                _consumer.ConsumeMessage(stoppingToken, orderDataAccess);
             }
             //await Task.Delay(1000);
 

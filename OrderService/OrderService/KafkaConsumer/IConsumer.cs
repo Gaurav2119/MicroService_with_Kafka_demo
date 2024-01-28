@@ -4,6 +4,6 @@ namespace OrderService.KafkaConsumer
 {
     public interface IConsumer
     {
-        void ConsumeMessage(string topic, CancellationToken cts, IOrder order);
+        void ConsumeMessage(CancellationToken cts, IOrder order);
     }
 }

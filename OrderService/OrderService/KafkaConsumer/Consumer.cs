@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using OrderService.DataAccess.Interface;
 using OrderService.Models;
@@ -9,24 +10,33 @@ namespace OrderService.KafkaConsumer
     {
         private readonly IConsumer<string, string> _consumer;
         private readonly ILogger<Consumer> _logger;
-        private readonly IServiceScopeFactory _scopeFactory;
+        private readonly string _topic;
 
-        public Consumer(IConfiguration configuration, ILogger<Consumer> logger, IServiceScopeFactory scopeFactory)
+        public Consumer(IOptions<KafkaConsumerConfig> kafkaConsumerConfig, ILogger<Consumer> logger)
         {
             _logger = logger;
 
-            var config = new ConsumerConfig();
+            var config = new ConsumerConfig
+            {
+                GroupId = kafkaConsumerConfig.Value.GroupId,
+                BootstrapServers = kafkaConsumerConfig.Value.BootstrapServers,
+                ClientId = kafkaConsumerConfig.Value.ClientId,
+                SecurityProtocol = SecurityProtocol.SaslSsl,
+                SaslMechanism = SaslMechanism.Plain,
+                AutoOffsetReset = AutoOffsetReset.Earliest,
+                SaslUsername = kafkaConsumerConfig.Value.SaslUsername,
+                SaslPassword = kafkaConsumerConfig.Value.SaslPassword
+            };
 
-            configuration.GetSection("Kafka").Bind(config);
+            _topic = kafkaConsumerConfig.Value.TopicSubscribed;
 
             _consumer = new ConsumerBuilder<string, string>(config).Build();
-            _scopeFactory = scopeFactory;
 
         }
 
-        public void ConsumeMessage(string topic, CancellationToken cts, IOrder orderAccess)
+        public void ConsumeMessage(CancellationToken cts, IOrder orderAccess)
         {
-            _consumer.Subscribe(topic);
+            _consumer.Subscribe(_topic);
 
             cts.Register(() =>
             {
@@ -57,7 +67,8 @@ namespace OrderService.KafkaConsumer
                         // Extract key and message and create an Order object
                         Order _order = new Order
                         {
-                            productId = Convert.ToInt32(kafkaKey), // Assuming the key is an integer
+                            Id = new Guid(),
+                            productId = new Guid(kafkaKey), // Assuming the key is an Guid
                             quantity = kafkaMessage?.quantity
                         };
 

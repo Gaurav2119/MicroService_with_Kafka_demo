@@ -2,6 +2,6 @@
 {
     public interface IProducer
     {
-        Task ProduceMessage(string key, string topic, string message);
+        Task ProduceMessage(Guid key, object message);
     }
 }

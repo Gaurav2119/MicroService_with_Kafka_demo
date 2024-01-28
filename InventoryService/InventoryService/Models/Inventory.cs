@@ -4,8 +4,7 @@ namespace InventoryService.Models
 {
     public class Inventory
     {
-        [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Display(Name = "Product Name")]
         public string? productName { get; set; }

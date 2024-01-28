@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace OrderService.Migrations
 {
     /// <inheritdoc />
-    public partial class v1 : Migration
+    public partial class order_v2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -14,9 +15,8 @@ namespace OrderService.Migrations
                 name: "orders",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    productId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    productId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     quantity = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

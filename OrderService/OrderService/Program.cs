@@ -13,10 +13,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<DBContext>(option =>
+builder.Services.AddDbContext<OrderDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.Configure<KafkaConsumerConfig>(builder.Configuration.GetSection("KafkaConsumer"));
 
 builder.Services.AddHostedService<KafkaBackground>();
 builder.Services.AddSingleton<IConsumer, Consumer>();

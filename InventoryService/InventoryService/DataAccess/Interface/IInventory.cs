@@ -8,8 +8,6 @@ namespace InventoryService.DataAccess.Interface
 
         void addProduct(Inventory inventory);
 
-        Task<Inventory?> GetProduct(int id);
-
-        IEnumerable<Inventory> GetAllProductsync();
+        Task<Inventory?> GetProduct(Guid id);
     }
 }

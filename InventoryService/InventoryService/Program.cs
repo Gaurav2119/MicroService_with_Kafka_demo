@@ -1,7 +1,9 @@
+using FluentValidation;
 using InventoryService.AppDbContext;
 using InventoryService.DataAccess.Implementation;
 using InventoryService.DataAccess.Interface;
 using InventoryService.KafkaProducer;
+using InventoryService.Validations;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,13 +16,16 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //configure db
-builder.Services.AddDbContext<DBContext>(option =>
+builder.Services.AddDbContext<productDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Services.Configure<KafkaProducerConfig>(builder.Configuration.GetSection("KafkaProducer"));
+
 builder.Services.AddScoped<IInventory, Inventory>();
 builder.Services.AddSingleton<IProducer, Producer>();
+builder.Services.AddScoped<IValidator<InventoryService.Models.Inventory>, InventoryValidations>();
 
 var app = builder.Build();
 
